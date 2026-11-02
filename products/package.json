@@ -1,0 +1,40 @@
+{
+  "name": "products-monorepo",
+  "private": true,
+  "type": "module",
+  "description": "Monorepo for standalone, licensed AI CLI tools and micro-utilities.",
+  "engines": {
+    "node": ">=20.12"
+  },
+  "workspaces": [
+    "shared",
+    "dev-tools/*",
+    "gaming-mods/*",
+    "creator-pipelines/*",
+    "lifestyle/*",
+    "micro-utilities/*"
+  ],
+  "scripts": {
+    "build": "tsx scripts/build-all.ts",
+    "build:binaries": "tsx scripts/build-all.ts --binary",
+    "release": "tsx scripts/build-all.ts --typecheck --pack",
+    "new": "tsx scripts/new-product.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "check": "npm run typecheck && npm test"
+  },
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "commander": "^14.0.3",
+    "ora": "^9.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "esbuild": "^0.28.2",
+    "postject": "1.0.0-alpha.6",
+    "tsx": "^4.23.15",
+    "typescript": "~5.9.3",
+    "vitest": "~4.0.18"
+  }
+}

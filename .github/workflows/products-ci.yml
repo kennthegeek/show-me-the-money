@@ -1,0 +1,68 @@
+name: Products CI
+
+# Runs on changes under products/. The binary matrix only runs on manual dispatch,
+# because standalone binaries embed Node (~110 MB each).
+
+on:
+  push:
+    paths: ["products/**", ".github/workflows/products-ci.yml"]
+  pull_request:
+    paths: ["products/**", ".github/workflows/products-ci.yml"]
+  workflow_dispatch:
+    inputs:
+      only:
+        description: "Comma-separated product names (empty = all)"
+        required: false
+        default: ""
+
+defaults:
+  run:
+    working-directory: products
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: products/package-lock.json
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build -- --pack
+      - uses: actions/upload-artifact@v4
+        if: hashFiles('products/dist/release/*.tgz') != ''
+        with:
+          name: npm-tarballs
+          path: products/dist/release/
+
+  binaries:
+    if: github.event_name == 'workflow_dispatch'
+    needs: check
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: products/package-lock.json
+      - run: npm ci
+      - name: Build standalone binaries
+        shell: bash
+        run: |
+          if [ -n "${{ github.event.inputs.only }}" ]; then
+            npm run build -- --binary --only "${{ github.event.inputs.only }}"
+          else
+            npm run build -- --binary
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: binaries-${{ runner.os }}-${{ runner.arch }}
+          path: products/dist/release/
