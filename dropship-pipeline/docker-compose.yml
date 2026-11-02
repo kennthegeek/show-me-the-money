@@ -1,0 +1,30 @@
+services:
+  dropship:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      WEBHOOK_HOST: 0.0.0.0          # inside the container; the port is only published on localhost
+      DATABASE_URL: sqlite:////app/data/dropship.db
+      LOG_FILE: /app/data/dropship.log
+    volumes:
+      - ./data:/app/data
+    ports:
+      - "127.0.0.1:8080:8080"        # expose publicly only through an HTTPS reverse proxy / tunnel
+
+  # Optional PostgreSQL. Enable with: docker compose --profile postgres up -d
+  # then set DATABASE_URL=postgresql://dropship:dropship@postgres:5432/dropship
+  # and add psycopg to the image (pip install ".[postgres]").
+  postgres:
+    image: postgres:17-alpine
+    profiles: ["postgres"]
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dropship
+      POSTGRES_PASSWORD: dropship
+      POSTGRES_DB: dropship
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

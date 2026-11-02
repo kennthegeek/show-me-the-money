@@ -1,0 +1,18 @@
+{{displayName}} — End User License Agreement
+
+Copyright (c) {{year}} {{vendor}}. All rights reserved.
+
+1. Grant. Subject to payment of the applicable fee, you are granted a non-exclusive,
+   non-transferable license to install and use this software on the number of machines
+   permitted by the tier you purchased (Hobbyist, Pro or Enterprise).
+2. Restrictions. You may not redistribute, resell, sublicense, or publish this software
+   or your license key, or circumvent its license verification.
+3. Updates. Updates within the major version you purchased are included.
+4. No warranty. The software is provided "as is", without warranty of any kind. In no
+   event shall the authors be liable for any claim, damages or other liability arising
+   from the use of the software.
+5. Termination. This license terminates automatically if you breach it or if your
+   purchase is refunded or charged back.
+
+Third-party open-source components bundled with this software are listed in the
+accompanying *.LEGAL.txt file and remain under their own licenses.

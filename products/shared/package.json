@@ -1,0 +1,12 @@
+{
+  "name": "@products/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared licensing, tiering and CLI scaffolding for every product. Bundled into each product at build time; never published on its own.",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts"
+  }
+}
