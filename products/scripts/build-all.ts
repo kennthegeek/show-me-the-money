@@ -69,6 +69,8 @@ async function bundle(p: Product, pkgDir: string): Promise<string> {
     // tsconfig "paths" resolve @products/shared even without an npm install link.
     tsconfig: join(ROOT, "tsconfig.base.json"),
     logLevel: "silent",
+    // Dev-only branches may reference import.meta (e.g. to locate tsx); they never run in bundles.
+    logOverride: { "empty-import-meta": "silent" },
     metafile: true,
   });
   for (const w of result.warnings) log(`  ⚠ ${w.text}`);

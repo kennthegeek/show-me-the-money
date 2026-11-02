@@ -33,7 +33,8 @@ const RECOVERABLE = new Set(["missing", "invalid", "revoked", "grace_expired", "
 export function box(lines: string[], color: (s: string) => string = chalk.cyan): string {
   // eslint-disable-next-line no-control-regex
   const visible = (s: string) => s.replace(/\u001b\[[0-9;]*m/g, "").length;
-  const width = Math.min(76, Math.max(...lines.map(visible)) + 2);
+  const maxWidth = Math.max(40, (process.stdout.columns || 120) - 2);
+  const width = Math.min(maxWidth, Math.max(...lines.map(visible)) + 2);
   const top = color(`╭${"─".repeat(width)}╮`);
   const bottom = color(`╰${"─".repeat(width)}╯`);
   const body = lines.map((l) => `${color("│")} ${l}${" ".repeat(Math.max(0, width - visible(l) - 1))}${color("│")}`);

@@ -27,6 +27,12 @@ products/
 
 **Stack:** TypeScript 5.9, Node 20+ (develop on 22), Commander 14, chalk 5, ora 9, esbuild, Vitest 4, tsx.
 
+## Products
+
+| Product | Category | Binary | What it does |
+|---|---|---|---|
+| [Legacy-De-Spaghetti](dev-tools/legacy-de-spaghetti/) | dev-tools | `despaghetti` | Ranks tangled functions in JS/TS codebases, generates characterization tests, and splits giant functions into helpers with behaviour verified at every step |
+
 ## Quick start
 
 ```bash

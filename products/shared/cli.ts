@@ -132,9 +132,21 @@ export async function runCli(program: Command, argv: string[] = process.argv): P
     cmd.commands.forEach(override);
   };
   override(program);
+  // `tool | head` closes stdout early; that's not an error worth a stack trace.
+  for (const stream of [process.stdout, process.stderr]) {
+    if (stream.listenerCount("error") === 0) {
+      stream.on("error", (e: NodeJS.ErrnoException) => {
+        if (e.code === "EPIPE") process.exit(process.exitCode ?? 0);
+        throw e;
+      });
+    }
+  }
+  // Commands may set process.exitCode themselves (e.g. a CI gate that found problems).
+  process.exitCode = undefined;
   try {
     await program.parseAsync(argv);
-    return (process.exitCode = EXIT.OK);
+    const set = process.exitCode;
+    return (process.exitCode = typeof set === "number" ? set : EXIT.OK);
   } catch (err) {
     const code = exitCodeFor(err);
     if (err instanceof CommanderError) {
